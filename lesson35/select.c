@@ -52,7 +52,7 @@ int main() {
       for (int i = lfd + 1; i <= maxfd; i++) {
         if (FD_ISSET(i, &tmp)) {
           // 说明这个文件描述符对应的客户端发来了数据
-          char buf[1024] = 0;
+          char buf[1024];
           int len = read(i, buf, sizeof(buf));
           if (len == -1) {
             perror("read");
