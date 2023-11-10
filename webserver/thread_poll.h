@@ -51,7 +51,7 @@ Threadpool<T>::Threadpool(int thread_number, int max_requests)
       m_max_requests(max_requests),
       m_stop(false),
       m_threads(NULL) {
-  if (thread_number < = 0 || max_requests <= 0) {
+  if (thread_number <= 0 || max_requests <= 0) {
     throw std::exception();
   }
 
@@ -78,7 +78,7 @@ Threadpool<T>::Threadpool(int thread_number, int max_requests)
 
 template <typename T>
 Threadpool<T>::~Threadpool() {
-  delete[] m_thread;
+  delete[] m_threads;
   m_stop = true;
 }
 
@@ -90,7 +90,7 @@ bool Threadpool<T>::append(T* request) {
     return false;
   }
 
-  m_workqueue.push_back(request);
+  m_workqueue.push(request);
   m_queuelock.unlock();
   m_queuestate.post();
   return true;
@@ -99,7 +99,7 @@ bool Threadpool<T>::append(T* request) {
 template <typename T>
 void* Threadpool<T>::worker(void* arg) {
   Threadpool* poll = (Threadpool*)arg;
-  pool->run();
+  poll->run();
   return poll;
 }
 template <typename T>
